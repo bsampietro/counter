@@ -1,4 +1,4 @@
-class Counter
+class PeriodCounter
   # duration: an integer representing the number of passed seconds,
   #   or any of: :hourly, :daily, :monthly, :yearly
   # context: any string that uniquely identifys different counters

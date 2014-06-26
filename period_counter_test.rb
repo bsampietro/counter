@@ -1,6 +1,6 @@
 require 'minitest/autorun'
 require 'debugger'
-require File.expand_path("../counter", __FILE__)
+require File.expand_path("../period_counter", __FILE__)
 
 class Cache
   def initialize
@@ -16,7 +16,7 @@ class Cache
   end
 end
 
-describe Counter do
+describe PeriodCounter do
   # before do
   #   # code
   # end
@@ -30,12 +30,12 @@ describe Counter do
   describe "symbol periods" do
     it "counts" do
       [:hourly, :daily, :monthly, :yearly].each do |duration|
-        counter = Counter.new(duration, 'something/100', cache)
+        counter = PeriodCounter.new(duration, 'something/100', cache)
         counter.add
         counter.add
         counter.count.must_equal 2
 
-        counter = Counter.new(duration, 'something/100', cache)
+        counter = PeriodCounter.new(duration, 'something/100', cache)
         counter.add
         counter.add
         counter.count.must_equal 4
@@ -43,24 +43,24 @@ describe Counter do
     end
 
     it "counts differently for different periods" do
-      counter = Counter.new(:hourly, 'something/100', cache)
+      counter = PeriodCounter.new(:hourly, 'something/100', cache)
       counter.add
       counter.add
       counter.count.must_equal 2
 
-      counter = Counter.new(:daily, 'something/100', cache)
+      counter = PeriodCounter.new(:daily, 'something/100', cache)
       counter.add
       counter.add
       counter.count.must_equal 2
     end
 
     it "counts differently for different contexts" do
-      counter = Counter.new(:hourly, 'something/100', cache)
+      counter = PeriodCounter.new(:hourly, 'something/100', cache)
       counter.add
       counter.add
       counter.count.must_equal 2
 
-      counter = Counter.new(:hourly, 'something/200', cache)
+      counter = PeriodCounter.new(:hourly, 'something/200', cache)
       counter.add
       counter.add
       counter.count.must_equal 2
@@ -69,40 +69,40 @@ describe Counter do
 
   describe "numerical periods" do
     it "counts for custom numerical periods" do
-      counter = Counter.new(2, 'something/100', cache)
+      counter = PeriodCounter.new(2, 'something/100', cache)
       counter.add
       counter.add
       counter.count.must_equal 2
 
       sleep 1
 
-      counter = Counter.new(2, 'something/100', cache)
+      counter = PeriodCounter.new(2, 'something/100', cache)
       counter.add
       counter.add
       counter.count.must_equal 4
     end
 
     it "should expire numerical periods" do
-      counter = Counter.new(1, 'something/100', cache)
+      counter = PeriodCounter.new(1, 'something/100', cache)
       counter.add
       counter.add
       counter.count.must_equal 2
 
       sleep 1
 
-      counter = Counter.new(1, 'something/100', cache)
+      counter = PeriodCounter.new(1, 'something/100', cache)
       counter.add
       counter.add
       counter.count.must_equal 2
     end
 
     it "counts different for different contexts" do
-      counter = Counter.new(5, 'something/100', cache)
+      counter = PeriodCounter.new(5, 'something/100', cache)
       counter.add
       counter.add
       counter.count.must_equal 2
 
-      counter = Counter.new(5, 'something/200', cache)
+      counter = PeriodCounter.new(5, 'something/200', cache)
       counter.add
       counter.add
       counter.count.must_equal 2
