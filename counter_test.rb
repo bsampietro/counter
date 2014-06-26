@@ -1,6 +1,6 @@
 require 'minitest/autorun'
 require 'debugger'
-require 'counter'
+require File.expand_path("../counter", __FILE__)
 
 class Cache
   def initialize
