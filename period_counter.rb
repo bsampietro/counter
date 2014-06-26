@@ -44,6 +44,13 @@ class PeriodCounter
     @count
   end
 
+  def reset
+    @count = 0
+    @init_time = nil
+    @cache.write(@count_key, nil)
+    @cache.write(@init_time_key, nil)
+  end
+
 
   private
 
