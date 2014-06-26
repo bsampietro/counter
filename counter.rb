@@ -1,8 +1,8 @@
 class Counter
   # duration: an integer representing the number of passed seconds,
   #   or any of: :hourly, :daily, :monthly, :yearly
-  # context: any string that identifys different counters
-  # cache: any store that has read and write methods
+  # context: any string that uniquely identifys different counters
+  # cache: any key value store that has read and write methods
   def initialize(duration, context, cache)
     @duration = duration
     @cache = cache
@@ -25,11 +25,11 @@ class Counter
         @cache.write(@init_time_key, @init_time)
       end
     when Integer
-      if @init_time && @duration > Time.now - @init_time
+      if @init_time && @duration > time_now - @init_time
         @count += 1
       else
         @count = 1
-        @init_time = Time.now
+        @init_time = time_now
         @cache.write(@init_time_key, @init_time)
       end
     else
@@ -44,19 +44,25 @@ class Counter
     @count
   end
 
+
+  private
+
   def time_now
-    raise "Not supported call" if !@duration.is_a?(Symbol)
     current_time = Time.now
     case @duration
-    when :hourly
-      current_time.hour
-    when :daily
-      current_time.day
-    when :monthly
-      current_time.month
-    when :yearly
-      current_time.year
+      when Symbol
+        case @duration
+          when :hourly then current_time.hour
+          when :daily then current_time.day
+          when :monthly then current_time.month
+          when :yearly then current_time.year
+          else
+            raise "Not supported duration"
+        end
+      when Integer
+        current_time
+      else
+        raise "Not supported duration type"
     end
   end
-
 end
